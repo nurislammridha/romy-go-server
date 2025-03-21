@@ -61,7 +61,8 @@ io.on('connection', (socket) => {
     });
     // Handle sending messages
     socket.on('sendMessage', async ({ senderId, receiverId, message, type }) => {
-        const newMessage = new Message({ senderId, receiverId, message, type });
+        // const newMessage = new Message({ senderId, receiverId, message, type });
+        const newMessage = { senderId, receiverId, message, type };
         // await newMessage.save();
 
         // Emit to the receiver's room
