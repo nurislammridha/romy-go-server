@@ -97,8 +97,8 @@ io.on('connection', (socket) => {
     // });
     //CHATTING FUNCTIONALITY END HERE
     //CALLING FUNCTION START HERE
-    socket.on("callUser", ({ userToCall, channelName, callerId }) => {
-        io.to(userToCall).emit("incomingCall", { channelName, callerId });
+    socket.on("callUser", ({ receiverId, channelName, callerId }) => {
+        io.to(receiverId).emit("incomingCall", { channelName, callerId });
     });
 
     socket.on("joinRoom", (userId) => {
