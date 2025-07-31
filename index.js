@@ -1,6 +1,6 @@
 const express = require("express");
 const http = require("http");
-const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
+// const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 const { Server } = require("socket.io");
 
 const app = express();
@@ -13,25 +13,25 @@ const io = new Server(server, {
     }
 });
 const PORT = 4000;
-const AGORA_APP_ID = "020850dba286443a8a3a6a7cc6435da4";
-const AGORA_APP_CERTIFICATE = "89fb86e6c8054ec28b6c067eeca6c700";
+// const AGORA_APP_ID = "020850dba286443a8a3a6a7cc6435da4";
+// const AGORA_APP_CERTIFICATE = "89fb86e6c8054ec28b6c067eeca6c700";
 //AGORA START HERE
 // Function to generate Agora token
-app.post("/get-token", (req, res) => {
-    const { channelName, uid } = req.body;
-    const expirationTime = 3600; // 1 hour
+// app.post("/get-token", (req, res) => {
+//     const { channelName, uid } = req.body;
+//     const expirationTime = 3600; // 1 hour
 
-    const token = RtcTokenBuilder.buildTokenWithUid(
-        AGORA_APP_ID,
-        AGORA_APP_CERTIFICATE,
-        channelName,
-        uid,
-        RtcRole.PUBLISHER,
-        expirationTime
-    );
+//     const token = RtcTokenBuilder.buildTokenWithUid(
+//         AGORA_APP_ID,
+//         AGORA_APP_CERTIFICATE,
+//         channelName,
+//         uid,
+//         RtcRole.PUBLISHER,
+//         expirationTime
+//     );
 
-    res.json({ token });
-});
+//     res.json({ token });
+// });
 //AGORA END HERE
 
 
@@ -40,7 +40,6 @@ app.post("/get-token", (req, res) => {
 // app.options("*", cors());
 // Store active drivers
 let activeDrivers = {};
-console.log('234', 123)
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
@@ -67,6 +66,26 @@ io.on('connection', (socket) => {
         // Notify the rider
         io.to(res.riderSocketId).emit('ride-status', {
             status: 'accepted',
+            data: res,
+        });
+    });
+    // When a driver start ride
+    socket.on('isRideStarted', (res) => {
+        console.log('Ride Started by driver:', res);
+
+        // Notify the rider
+        io.to(res.riderSocketId).emit('isRideStartedByDriver', {
+            status: true,
+            data: res,
+        });
+    });
+    // When a driver complete ride
+    socket.on('ride-completed', (res) => {
+        console.log('Ride Started by driver:', res);
+
+        // Notify the rider
+        io.to(res.riderSocketId).emit('ride-completed-by-driver', {
+            status: true,
             data: res,
         });
     });
