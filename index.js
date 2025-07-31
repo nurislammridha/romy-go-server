@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     // When a driver comes online
     socket.on('driver-online', (driverData) => {
         activeDrivers[socket.id] = driverData; // Save driver info
-        console.log('Active Drivers:', activeDrivers);
+        // console.log('Active Drivers:', activeDrivers);
     });
 
     // Listen for ride requests
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
     });
     // When a driver start ride
     socket.on('isRideStarted', (res) => {
-        console.log('Ride Started by driver:', res);
+        console.log('Ride Started by driver:', res.riderSocketId);
 
         // Notify the rider
         io.to(res.riderSocketId).emit('isRideStartedByDriver', {
@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     });
     // When a driver complete ride
     socket.on('ride-completed', (res) => {
-        console.log('Ride Started by driver:', res);
+        console.log('Ride Completed by driver:', res.riderSocketId);
 
         // Notify the rider
         io.to(res.riderSocketId).emit('ride-completed-by-driver', {
