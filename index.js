@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
 
     // When a driver accepts the ride
     socket.on('ride-accepted', (res) => {
-        console.log('Ride Accepted by:', res);
+        // console.log('Ride Accepted by:', res);
 
         // Find the latest socketId for the rider from activeRiders array
         const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
@@ -84,23 +84,45 @@ io.on('connection', (socket) => {
     });
     // When a driver start ride
     socket.on('isRideStarted', (res) => {
-        console.log('Ride Started by driver:', res.riderSocketId);
+        // console.log('Ride Started by driver:', res.riderSocketId);
 
         // Notify the rider
-        io.to(res.riderSocketId).emit('isRideStartedByDriver', {
-            status: true,
-            data: res,
-        });
+        // io.to(res.riderSocketId).emit('isRideStartedByDriver', {
+        //     status: true,
+        //     data: res,
+        // });
+        const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
+
+        if (rider && rider.riderSocketId) {
+            io.to(rider.riderSocketId).emit('isRideStartedByDriver', {
+                status: true,
+                data: res
+            });
+            console.log(`Ride status sent to rider ${rider.id}`);
+        } else {
+            console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+        }
     });
     // When a driver complete ride
     socket.on('ride-completed', (res) => {
-        console.log('Ride Completed by driver:', res.riderSocketId);
+        // console.log('Ride Completed by driver:', res.riderSocketId);
 
         // Notify the rider
-        io.to(res.riderSocketId).emit('ride-completed-by-driver', {
-            status: true,
-            data: res,
-        });
+        // io.to(res.riderSocketId).emit('ride-completed-by-driver', {
+        //     status: true,
+        //     data: res,
+        // });
+        const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
+
+        if (rider && rider.riderSocketId) {
+            io.to(rider.riderSocketId).emit('ride-completed-by-driver', {
+                status: true,
+                data: res
+            });
+            console.log(`Ride status sent to rider ${rider.id}`);
+        } else {
+            console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+        }
     });
 
     // Handle disconnect
