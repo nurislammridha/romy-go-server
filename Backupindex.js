@@ -40,7 +40,7 @@ const PORT = 4000;
 // app.options("*", cors());
 // Store active drivers
 let activeDrivers = {};
-let activeRiders = [];
+let activeRiders = {};
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
     });
     // When a rider comes online
     socket.on('rider-online', (riderData) => {
-        activeRiders.push(riderData); // Save rider info
+        activeRiders[socket.id] = riderData; // Save rider info
         // console.log('Active rider:', activeRiders);
     });
 
@@ -69,18 +69,11 @@ io.on('connection', (socket) => {
     socket.on('ride-accepted', (res) => {
         console.log('Ride Accepted by:', res);
 
-        // Find the latest socketId for the rider from activeRiders array
-        const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
-
-        if (rider && rider.riderSocketId) {
-            io.to(rider.riderSocketId).emit('ride-status', {
-                status: 'accepted',
-                data: res
-            });
-            console.log(`Ride status sent to rider ${rider.id}`);
-        } else {
-            console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
-        }
+        // Notify the rider
+        io.to(res.riderSocketId).emit('ride-status', {
+            status: 'accepted',
+            data: res,
+        });
     });
     // When a driver start ride
     socket.on('isRideStarted', (res) => {
