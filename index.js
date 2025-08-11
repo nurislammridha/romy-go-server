@@ -67,7 +67,6 @@ io.on('connection', (socket) => {
 
     // When a driver accepts the ride
     socket.on('ride-accepted', (res) => {
-        // console.log('Ride Accepted by:', res);
 
         // Find the latest socketId for the rider from activeRiders array
         const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
