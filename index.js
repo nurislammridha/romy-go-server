@@ -72,6 +72,7 @@ io.on('connection', (socket) => {
         const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
 
         if (rider && rider.riderSocketId) {
+            console.log('rider.riderSocketId', rider.riderSocketId)
             io.to(rider.riderSocketId).emit('ride-status', {
                 status: 'accepted',
                 data: res
