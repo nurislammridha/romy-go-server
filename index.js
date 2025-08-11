@@ -51,8 +51,12 @@ io.on('connection', (socket) => {
     });
     // When a rider comes online
     socket.on('rider-online', (riderData) => {
-        activeRiders.push(riderData); // Save rider info
-        console.log('Active rider:', activeRiders);
+        if (riderData?.id) {
+            // Remove any existing record for this rider
+            activeRiders = activeRiders.filter(r => r.id !== riderData.id);
+            // Push the updated data (new socketId, etc.)
+            activeRiders.push(riderData);
+        }
     });
 
     // Listen for ride requests
