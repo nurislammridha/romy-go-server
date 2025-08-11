@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
                 status: 'accepted',
                 data: res
             });
-            console.log(`Ride status sent to rider ${rider.id}`);
+            console.log(`Ride accepted info sent to rider ${rider.id}`);
         } else {
             console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
         }
