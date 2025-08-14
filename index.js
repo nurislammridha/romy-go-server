@@ -81,10 +81,15 @@ io.on('connection', (socket) => {
                 status: 'accepted',
                 data: res
             });
-            console.log(`Ride accepted info sent to rider ${rider.id}`);
+            // console.log(`Ride accepted info sent to rider ${rider.id}`);
         } else {
-            console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+            // console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
         }
+        //send other driver a to hide accepted ride
+        for (let driverSocketId in activeDrivers) {
+            io.to(driverSocketId).emit('accepted_ride_id', res?.rideInfo?.id);
+        }
+
     });
     // When a driver start ride
     socket.on('isRideStarted', (res) => {
@@ -102,9 +107,9 @@ io.on('connection', (socket) => {
                 status: true,
                 data: res
             });
-            console.log(`Ride status sent to rider ${rider.id}`);
+            // console.log(`Ride status sent to rider ${rider.id}`);
         } else {
-            console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+            // console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
         }
     });
     // When a driver complete ride
@@ -123,9 +128,9 @@ io.on('connection', (socket) => {
                 status: true,
                 data: res
             });
-            console.log(`Ride status sent to rider ${rider.id}`);
+            // console.log(`Ride status sent to rider ${rider.id}`);
         } else {
-            console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+            // console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
         }
     });
 
@@ -163,9 +168,9 @@ io.on('connection', (socket) => {
         socket.join(userId);
     });
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-    });
+    // socket.on("disconnect", () => {
+    //     console.log("User disconnected:", socket.id);
+    // });
     //CALLING FUNCTION END HERE
 
 
