@@ -42,12 +42,12 @@ const PORT = 4000;
 let activeDrivers = {};
 let activeRiders = [];
 io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+    // console.log('A user connected:', socket.id);
 
     // When a driver comes online
     socket.on('driver-online', (driverData) => {
         activeDrivers[socket.id] = driverData; // Save driver info
-        // console.log('Active Drivers:', activeDrivers);
+        console.log('Active Drivers:', activeDrivers);
     });
     // When a rider comes online
     socket.on('rider-online', (riderData) => {
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 
     // Listen for ride requests
     socket.on('ride-request', (rideDetails) => {
-        // console.log('Ride Requested:', rideDetails);
+        console.log('Ride Requested:', rideDetails);
 
         // Notify all active drivers
         for (let driverSocketId in activeDrivers) {
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
 
         // Find the latest socketId for the rider from activeRiders array
         const rider = activeRiders.find(r => r.id === res.rideInfo.rider_id);
-        console.log('rider after check', rider)
+        // console.log('rider after check', rider)
         if (rider && rider.riderSocketId) {
             // console.log('rider.riderSocketId', rider.riderSocketId)
             io.to(rider.riderSocketId).emit('ride-status', {
