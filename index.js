@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 
     // Listen for ride requests
     socket.on('ride-request', (rideDetails) => {
-        console.log('Ride Requested:', rideDetails);
+        console.log('Ride Requested:', rideDetails);//ccc
 
         // Notify all active drivers
         for (let driverSocketId in activeDrivers) {
