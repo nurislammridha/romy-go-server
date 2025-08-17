@@ -146,7 +146,7 @@ io.on('connection', (socket) => {
         const driver = activeDriversArr.find(r => r.id === res.driverId);
 
         if (driver && driver.driverSocketId) {
-            io.to(rider.driverSocketId).emit('cancel-ride-by-rider', {
+            io.to(driver.driverSocketId).emit('cancel-ride-by-rider', {
                 status: true,
                 data: res
             });
