@@ -41,13 +41,19 @@ const PORT = 4000;
 // Store active drivers
 let activeDrivers = {};
 let activeRiders = [];
+let activeDriversArr = [];
 io.on('connection', (socket) => {
     // console.log('A user connected:', socket.id);
 
     // When a driver comes online
     socket.on('driver-online', (driverData) => {
         activeDrivers[socket.id] = driverData; // Save driver info
-        console.log('Active Drivers:', activeDrivers);
+        if (driverData?.id) {
+            // Remove any existing record for this rider
+            activeDriversArr = activeDriversArr.filter(r => r.id !== driverData.id);
+            // Push the updated data (new socketId, etc.)
+            activeDriversArr.push(driverData);
+        }
     });
     // When a rider comes online
     socket.on('rider-online', (riderData) => {
@@ -133,7 +139,20 @@ io.on('connection', (socket) => {
             // console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
         }
     });
+    // When a rider cancel a ride
+    socket.on('cancel-ride-by-rider', (res) => {
+        const driver = activeDriversArr.find(r => r.id === res.driverId);
 
+        if (driver && driver.driverSocketId) {
+            io.to(rider.driverSocketId).emit('cancel-ride-by-rider', {
+                status: true,
+                data: res
+            });
+            // console.log(`Ride status sent to rider ${rider.id}`);
+        } else {
+            // console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+        }
+    });
     // Handle disconnect
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
