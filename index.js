@@ -48,11 +48,13 @@ io.on('connection', (socket) => {
     // When a driver comes online
     socket.on('driver-online', (driverData) => {
         activeDrivers[socket.id] = driverData; // Save driver info
+        console.log('driverData', driverData)
         if (driverData?.id) {
             // Remove any existing record for this rider
             activeDriversArr = activeDriversArr.filter(r => r.id !== driverData.id);
             // Push the updated data (new socketId, etc.)
             activeDriversArr.push(driverData);
+            console.log('activeDriversArr', activeDriversArr)
         }
     });
     // When a rider comes online
