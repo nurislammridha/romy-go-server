@@ -148,9 +148,9 @@ io.on('connection', (socket) => {
                 status: true,
                 data: res
             });
-            // console.log(`Ride status sent to rider ${rider.id}`);
+            console.log(`Ride status sent to driver`);
         } else {
-            // console.log(`No active socket found for rider ${res.rideInfo.rider_id}`);
+            console.log(`No active socket found for rider ${res?.driverId}`);
         }
     });
     // Handle disconnect
