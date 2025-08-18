@@ -155,6 +155,20 @@ io.on('connection', (socket) => {
             console.log(`No active socket found for rider ${res?.driverId}`);
         }
     });
+    // When a driver cancel a ride
+    socket.on('cancel-ride-by-driver', (res) => {
+        const rider = activeRiders.find(r => r.id === res.riderId);
+
+        if (rider && rider.riderSocketId) {
+            io.to(rider.riderSocketId).emit('cancel-ride-by-driver', {
+                status: true,
+                data: res
+            });
+            console.log(`Ride status sent to rider`);
+        } else {
+            console.log(`No active socket found for rider ${res?.riderId}`);
+        }
+    });
     // Handle disconnect
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
